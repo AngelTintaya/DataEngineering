@@ -73,6 +73,7 @@ Data Engineering Project
 - Click in Enable (Update any automation for principal/group management, such as SCIM, Okta and Microsoft Entra connectors, and Terraform to reference account endpoints instead of workspace endpoints
 )
 - We can close the Account Console now
+
 12. Creating Cluster:
     A.Multi Node
     - Click in Compute
@@ -127,6 +128,21 @@ Data Engineering Project
     - Workers: 1
     - Spot Instances: Should leave unchecked
     - Driver Type: Same as worker
+    - Terminate after: 15 min of inactivity
+    - Click in Create Compute
+
+    D.Single Node (Best Option)
+    - Click in Compute
+    - Click in Create Compute
+    - Policy: Unrestricted
+    - Select Single Node
+    - Access Mode: Dedicated (Single User): Add the GROUP
+    - Runtime: 15.4 LTS (Scala 2.12, Spark 3.5.0)
+    - Uses Photon Acceleration: Checked
+    - Node Type:
+        Standard_DS3_v2 14 GB Memory, 4 Cores (General Purpose) or
+        Standard_D3_v2 14 GB Memory, 4 Cores (General Purpose HDD)
+        (If can not create, choose: Standard_D4s_v3 16 GB Memory, 4 Cores)
     - Terminate after: 15 min of inactivity
     - Click in Create Compute
 
@@ -267,3 +283,57 @@ Once it is attached, it is called: Storage Credential
 - Click in Add
 - Click in Save
 
+# Creating Git Folder into Databricks Account
+1. Get clone URL from repo in Github
+2. Go to Databricks
+3. Go to workspace
+4. Click in workspace
+5. Click in users
+6. Click in Create (in the right side)
+7. Click in git folder (Name will be by default the name of the repo)
+8. Click in Create (Now we get the repo inside our current user)
+(Note: We have created the git folder in the databricks account
+but we still do not connected our github account with databricks repositories)
+
+# Connect Github Account wiith Databricks Repo
+(We need to do this, otherwise we can modify repo in databricks but we will not be able to pull changes)
+1. Click in our User Prifle (Right side)
+2. Click in Settings
+3. Below user, click in Linked Accounts (We will see there: Git Integration)
+4. In Git Provider: Choose GitHub
+5. Select "Link Git Account"
+6. Click Link (It will link by default to the Github Account you are logged in)
+7. Click in configure in Github
+8. It will create a Databricks account that will connect to your github
+9. We must connect to the repo you want it link (By default it will point to all repos)
+- Select "Only select repositories" (instead of All repositories)
+- Click on Install
+- It will take you to a webpage in your github account in case we want to make updates
+- Everything is set up now.
+
+# Use Databricks Git
+1. We can go to our workspace
+2. In Home we can see our Repo, we can click in the branch ("develop")
+3. We are going to see the changes there now.
+4. Click in "Create Branch"
+5. Name it: feature/add-requirements-file (Based on Develop)
+6. We can see we are working in our own branch now
+7. Create requirements.txt in the repo
+8. In the repo, click in the branch
+9. It will capture the changes
+10. Define a commit message: chore: initialize Python dependencies with requirements.txt
+11. Click in commit Commit & Push
+12. It now made un update and loaded the branch with the changes in github
+13. A message will recomend you to do a "Pull request", click on it (Or Create a PR in Github)
+14. Make sure you will do a PR from your current branch to develop.
+15. Review only your changes were made
+16. Click Create PR.
+17. Click "Create Pull Request"
+18. Wait for Owner to accept PR
+19. Click on Delete Branch
+20. Now the code should be updated.
+
+# Git: Develop has changes and in loca I also have chages
+- git fetch origin: To get the latest commit
+- Stage current changes
+- git rebase origin/develop: re-apply our local commit on top of remote develop
