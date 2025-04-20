@@ -4,7 +4,7 @@ Data Engineering Project
 ## Steps
 1. Create Repo
 2. Clone Repo in VSCode
-3. Create Resource Grou: RGDataEngineering
+3. Create Resource Group: RGDataEngineering
 4. Create Storage Account
 - Select LRS (Local Redundant Storage)
 - Enable Hierarquical Namespace
@@ -297,7 +297,7 @@ but we still do not connected our github account with databricks repositories)
 
 # Connect Github Account wiith Databricks Repo
 (We need to do this, otherwise we can modify repo in databricks but we will not be able to pull changes)
-1. Click in our User Prifle (Right side)
+1. Click in our User Profile (Right side)
 2. Click in Settings
 3. Below user, click in Linked Accounts (We will see there: Git Integration)
 4. In Git Provider: Choose GitHub
@@ -333,7 +333,23 @@ but we still do not connected our github account with databricks repositories)
 19. Click on Delete Branch
 20. Now the code should be updated.
 
-# Git: Develop has changes and in loca I also have chages
+# Git: Develop has changes and in local I also have chages
 - git fetch origin: To get the latest commit
 - Stage current changes
 - git rebase origin/develop: re-apply our local commit on top of remote develop
+
+# If can not push to develop because a rule that force PR
+- create a new branch (It will take your changes)
+- Push the new branch
+- Do a PR in Github
+- Go to develop
+- Do a git pull origin develop
+- Now develop is up to date.
+- Make sure to delete unnecessary branchs in local
+
+# Delete unncecessary branches in local
+- Checkout to other branch (develop)
+- git branch -d branch_name: Will delete the branch
+- git remote prune origin: Will remove deleted branch from logs
+
+# Sync Github in AzureDatabricks (Alumns)
