@@ -4,7 +4,7 @@ Data Engineering Project
 ## Steps
 1. Create Repo
 2. Clone Repo in VSCode
-3. Create Resource Group: RGDataEngineering
+3. Create Resource Group: RGDataEngineering (rg-de-mdsai)
 4. Create Storage Account
 - Select LRS (Local Redundant Storage)
 - Enable Hierarquical Namespace
@@ -44,6 +44,7 @@ Data Engineering Project
 - Click in: Review + Create
 - Click in Create
 10. Set Up Access Connector Permissions
+(Note: In order to be able, user should have access to UserAccessADministration. Request it to Global Administrator)
 - Go to our Storage Account: storagemodernde
 - Click in Access Control (IAM)
 - Click in Add
@@ -59,6 +60,7 @@ Data Engineering Project
 - Click in Review + Assign (Again)
 (Now It will assign that role to the access connector, so it can use the Storage Account)
 11. Enable Unity Catalog (Includes Provide Access Connector to Databricks)
+- Go to Account Console
 - Go to Catalog
 - Delete Current default Metastore (Click on it, then delete it)
 - Click in Create Metastore
@@ -191,6 +193,7 @@ Once it is attached, it is called: Storage Credential
 - Click External Data
 - Click Create External Location
 - Name it as: myextloc
+- Copy the url considering the container: datalake
 - In storage credential: Select the one that was created : atmcreds
 - Click in create
 - Now we can read or create data into that container
@@ -353,3 +356,19 @@ but we still do not connected our github account with databricks repositories)
 - git remote prune origin: Will remove deleted branch from logs
 
 # Sync Github in AzureDatabricks (Alumns)
+
+# Upgrading Databricks to Premium
+
+Resources:
+- Resource Group:           RGDataEngineering           |   rg-de-mdsai
+- Storage Account:          storagemodernde             |   stdemdsai
+- Container:                datalake                    |   datalake
+- Cont. datalake Files I:    raw, bronze, silver, gold
+- Cont. datalake Files II:   external_catalog_loc, external_table
+- Container:                metastoreroot               |   metastoreroot
+- Databricks Workspace:     ws-prod-de                  |   ws-dev-de-mdsai
+- Dbk Manage RG:            RGDataEngineeringManaged    |   rg-de-mdsai-managed
+- Dbk Access Connector:     accessModernDE              |   accessModernDE
+- Dbk Metastore:            metastoreModernDE           |   metastoreModernDE
+- Dbk Storage Credential:   atmcreds                    |   atmcreds
+- Dbk External Location:    myextloc                    |   myextloc
