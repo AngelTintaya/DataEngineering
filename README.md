@@ -372,3 +372,44 @@ Resources:
 - Dbk Metastore:            metastoreModernDE           |   metastoreModernDE
 - Dbk Storage Credential:   atmcreds                    |   atmcreds
 - Dbk External Location:    myextloc                    |   myextloc
+
+# Install library bt default in a cluster
+1. Go to cluster
+2. Go to libraries
+3. Click Install New
+4. Select Pypi option
+5. Write Package name with version: google-api-python-client==2.170.0
+6. Click Install (Now, everytime the cluster intialize, it will install the library)
+
+# Generate Personal Access Token
+Tutorial: https://docs.databricks.com/aws/en/dev-tools/auth/pat
+1. Go to databricks workspace
+2. Go to settings (In the right part)
+3. Click in Developer
+4. Next to Access Token, click in Manage
+5. Click in "Generate New Token"
+6. Click in Generate
+7. Copy and stored the token (You only will see the token once)
+8. Click in done
+
+# Create a Secret:
+0. Go to DATAENGINEERING repo
+1. Open a terminal in vscode
+2. Install databricks cli: pip install databricks-cli --upgrade
+3. Configure token: databricks configure --token
+4. Type Databricks host: https://<your-workspace>.azuredatabricks.net
+5. Paste the token
+6. Now you are connected to your Databricks workspace via CLI
+7. Create scope: databricks secrets create-scope --scope de-scope (Whe de-scope is my new scope)
+8. Add a secret to the scope:
+    databricks secrets put --scope de-scope --key de-secret-key --string-value "super-secret-value"
+    databricks secrets put --scope de-scope --key de-google-key --string-value "super-secret-value"
+9. Now it stored the secret "de-secret-key" in the scope "de-scope"
+10. List all scopes:                databricks secrets list-scopes
+11. List secrets in a de-scope:     databricks secrets list --scope de-scope
+12. Check currenct ACLs:            databricks secrets list-acls --scope de-scope
+13. Give READ permission to the secret to a group:
+    databricks secrets put-acl --scope de-scope --principal "utec-de" --permission READ
+
+12. Call the secret in databricks:
+    my_secret = dbutils.secrets.get(scope="de-scope", key="de-secret-key")
