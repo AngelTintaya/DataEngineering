@@ -4,7 +4,7 @@ Data Engineering Project
 ## Steps
 1. Create Repo
 2. Clone Repo in VSCode
-3. Create Resource Grou: RGDataEngineering
+3. Create Resource Group: RGDataEngineering (rg-de-mdsai)
 4. Create Storage Account
 - Select LRS (Local Redundant Storage)
 - Enable Hierarquical Namespace
@@ -44,6 +44,7 @@ Data Engineering Project
 - Click in: Review + Create
 - Click in Create
 10. Set Up Access Connector Permissions
+(Note: In order to be able, user should have access to UserAccessADministration. Request it to Global Administrator)
 - Go to our Storage Account: storagemodernde
 - Click in Access Control (IAM)
 - Click in Add
@@ -59,6 +60,7 @@ Data Engineering Project
 - Click in Review + Assign (Again)
 (Now It will assign that role to the access connector, so it can use the Storage Account)
 11. Enable Unity Catalog (Includes Provide Access Connector to Databricks)
+- Go to Account Console
 - Go to Catalog
 - Delete Current default Metastore (Click on it, then delete it)
 - Click in Create Metastore
@@ -191,6 +193,7 @@ Once it is attached, it is called: Storage Credential
 - Click External Data
 - Click Create External Location
 - Name it as: myextloc
+- Copy the url considering the container: datalake
 - In storage credential: Select the one that was created : atmcreds
 - Click in create
 - Now we can read or create data into that container
@@ -297,7 +300,7 @@ but we still do not connected our github account with databricks repositories)
 
 # Connect Github Account wiith Databricks Repo
 (We need to do this, otherwise we can modify repo in databricks but we will not be able to pull changes)
-1. Click in our User Prifle (Right side)
+1. Click in our User Profile (Right side)
 2. Click in Settings
 3. Below user, click in Linked Accounts (We will see there: Git Integration)
 4. In Git Provider: Choose GitHub
@@ -333,7 +336,80 @@ but we still do not connected our github account with databricks repositories)
 19. Click on Delete Branch
 20. Now the code should be updated.
 
-# Git: Develop has changes and in loca I also have chages
+# Git: Develop has changes and in local I also have chages
 - git fetch origin: To get the latest commit
 - Stage current changes
 - git rebase origin/develop: re-apply our local commit on top of remote develop
+
+# If can not push to develop because a rule that force PR
+- create a new branch (It will take your changes)
+- Push the new branch
+- Do a PR in Github
+- Go to develop
+- Do a git pull origin develop
+- Now develop is up to date.
+- Make sure to delete unnecessary branchs in local
+
+# Delete unncecessary branches in local
+- Checkout to other branch (develop)
+- git branch -d branch_name: Will delete the branch
+- git remote prune origin: Will remove deleted branch from logs
+
+# Sync Github in AzureDatabricks (Alumns)
+
+# Upgrading Databricks to Premium
+
+Resources:
+- Resource Group:           RGDataEngineering           |   rg-de-mdsai
+- Storage Account:          storagemodernde             |   stdemdsai
+- Container:                datalake                    |   datalake
+- Cont. datalake Files I:    raw, bronze, silver, gold
+- Cont. datalake Files II:   external_catalog_loc, external_table
+- Container:                metastoreroot               |   metastoreroot
+- Databricks Workspace:     ws-prod-de                  |   ws-dev-de-mdsai
+- Dbk Manage RG:            RGDataEngineeringManaged    |   rg-de-mdsai-managed
+- Dbk Access Connector:     accessModernDE              |   accessModernDE
+- Dbk Metastore:            metastoreModernDE           |   metastoreModernDE
+- Dbk Storage Credential:   atmcreds                    |   atmcreds
+- Dbk External Location:    myextloc                    |   myextloc
+
+# Install library bt default in a cluster
+1. Go to cluster
+2. Go to libraries
+3. Click Install New
+4. Select Pypi option
+5. Write Package name with version: google-api-python-client==2.170.0
+6. Click Install (Now, everytime the cluster intialize, it will install the library)
+
+# Generate Personal Access Token
+Tutorial: https://docs.databricks.com/aws/en/dev-tools/auth/pat
+1. Go to databricks workspace
+2. Go to settings (In the right part)
+3. Click in Developer
+4. Next to Access Token, click in Manage
+5. Click in "Generate New Token"
+6. Click in Generate
+7. Copy and stored the token (You only will see the token once)
+8. Click in done
+
+# Create a Secret:
+0. Go to DATAENGINEERING repo
+1. Open a terminal in vscode
+2. Install databricks cli: pip install databricks-cli --upgrade
+3. Configure token: databricks configure --token
+4. Type Databricks host: https://<your-workspace>.azuredatabricks.net
+5. Paste the token
+6. Now you are connected to your Databricks workspace via CLI
+7. Create scope: databricks secrets create-scope --scope de-scope (Whe de-scope is my new scope)
+8. Add a secret to the scope:
+    databricks secrets put --scope de-scope --key de-secret-key --string-value "super-secret-value"
+    databricks secrets put --scope de-scope --key de-google-key --string-value "super-secret-value"
+9. Now it stored the secret "de-secret-key" in the scope "de-scope"
+10. List all scopes:                databricks secrets list-scopes
+11. List secrets in a de-scope:     databricks secrets list --scope de-scope
+12. Check currenct ACLs:            databricks secrets list-acls --scope de-scope
+13. Give READ permission to the secret to a group:
+    databricks secrets put-acl --scope de-scope --principal "utec-de" --permission READ
+
+12. Call the secret in databricks:
+    my_secret = dbutils.secrets.get(scope="de-scope", key="de-secret-key")
